@@ -69,6 +69,12 @@ function loadUpWP() {
             } else if ($$('#checkout-review-submit button')[0]) {
                 magentoCheckoutButton = '#checkout-review-submit button';
             }
+
+            if (typeof $$(magentoCheckoutButton)[0] == 'undefined') {
+                // unable to find magentoCheckoutButton
+                return;
+            }
+
             if ($('payment_form_worldpay_cc')) {
                  Event.observe($('payment_form_worldpay_cc'), 'payment-method:switched-off', function(event){
                     selectedExisitingCard = true;
