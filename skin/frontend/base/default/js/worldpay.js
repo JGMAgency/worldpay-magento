@@ -63,6 +63,9 @@ function loadUpWP() {
 
             if ($$('#payment-buttons-container button')[0]) {
                 magentoCheckoutButton = '#payment-buttons-container button';
+            } else if ($$('#checkout-review-submit button.btn-checkout')[0]) {
+                // Need to target more precisely to avoid picking up IWN OnePageCheckout modal-agreement buttons
+                magentoCheckoutButton = '#checkout-review-submit button.btn-checkout';
             } else if ($$('#checkout-review-submit button')[0]) {
                 magentoCheckoutButton = '#checkout-review-submit button';
             }
