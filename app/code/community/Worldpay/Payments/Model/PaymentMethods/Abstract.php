@@ -220,8 +220,8 @@ abstract class Worldpay_Payments_Model_PaymentMethods_Abstract extends Mage_Paym
                 else {
                     $response = 'window.WorldpayMagento.loadThreeDS("'. Mage::getUrl('worldpay/threeDS') .'")';
                     if (strpos($path, 'json') !== false) {
-                        $this->getResponse()->setHeader('Content-type','application/json', true);
-                        $this->getResponse()->setBody(Mage::helper('core')->jsonEncode($response));
+                        Mage::app()->getFrontController()->getResponse()->setHeader('Content-type','application/json', true);
+                        Mage::app()->getFrontController()->getResponse()->setBody(Mage::helper('core')->jsonEncode($response));
                         Mage::app()->getResponse()->sendResponse();
                     } else {
                         echo $response;
