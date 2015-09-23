@@ -190,7 +190,11 @@ function loadUpWP() {
         threeDSAuthorised: function() {
             document.body.removeChild(document.getElementById('worldpay-threeDsFrame'));
             if (isOnePageCheckout) {
-                review.save();
+                if ((typeof window.IWD !== 'undefined') && (typeof window.IWD.OPC !== 'undefined')) {
+                    window.IWD.OPC.saveOrder();
+                } else {
+                    review.save();
+                }
             } else {
                 document.getElementById('review-button').setAttribute('onclick', '');
                 $('review-button').click();
