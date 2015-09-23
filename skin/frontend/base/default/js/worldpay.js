@@ -1,4 +1,26 @@
 window.WorldpayIntegrationMode = 'template';
+
+/**
+ * Wrapper for the WorldPay formBuilder
+ * - removes elements if they already exist before adding them
+ *
+ * @see Worldpay.formBuilder
+ *
+ * @param form
+ * @param element
+ * @param type
+ * @param name
+ * @param value
+ * @param id
+ */
+function addFormElement(form, element, type, name, value, id) {
+    var selector = element + '[name="' + name + '"]';
+    if ($$(selector).size() > 0) {
+        form.removeChild($$(selector)[0]);
+    }
+    Worldpay.formBuilder(form, element, type, name, value, id);
+}
+
 function loadUpWP() {
     WorldpayMagentoVersion = '1.5.0';
     var form;
@@ -33,14 +55,14 @@ function loadUpWP() {
                         handleWorldpayErrors(status, response, function(message) {
                             document.getElementById('worldpay-payment-errors').style.display = 'none';
                             var token = message.token;
-                            Worldpay.formBuilder(form, 'input', 'hidden', 'payment[token]', token);
+                            addFormElement(form, 'input', 'hidden', 'payment[token]', token);
                             form.submit();
                         });
                     });
                 } else {
                     Worldpay.useTemplate('multishipping-billing-form', 'worldpay-iframe', 'inline', function(message) {
                         var token = message.token;
-                        Worldpay.formBuilder(form, 'input', 'hidden', 'payment[token]', token);
+                        addFormElement(form, 'input', 'hidden', 'payment[token]', token);
                         form.submit();
                     });
                 }
@@ -54,7 +76,7 @@ function loadUpWP() {
             if (window.WorldpayIntegrationMode != 'ownForm') {
                 Worldpay.useTemplate('co-payment-form', 'worldpay-iframe', 'inline', function(message) {
                     var token = message.token;
-                    Worldpay.formBuilder(form, 'input', 'hidden', 'payment[token]', token);
+                    addFormElement(form, 'input', 'hidden', 'payment[token]', token);
                     payment.save();
                 });
             }
@@ -86,7 +108,7 @@ function loadUpWP() {
                     $$(magentoCheckoutButton)[0].setAttribute('onclick', 'window.WorldpayMagento.submitCard()');
                 });
             }
-           
+
             isPostForm = false;
         }
         if (document.getElementById('worldpay-newcard')) {
@@ -113,7 +135,7 @@ function loadUpWP() {
                 document.getElementById('worldpay-newcard').attachEvent("change", newCardChange);
             }
 
-            $$('.worldpay-savedcard-input').each(function(el) { 
+            $$('.worldpay-savedcard-input').each(function(el) {
 
                 el.observe('click', function(event){
                     selectedExisitingCard = true;
@@ -134,7 +156,7 @@ function loadUpWP() {
                 });
             });
         }
-        
+
         function checkIfNewCard() {
             return !!getCheckedRadio(form.elements.savedcard);
         }
@@ -212,8 +234,8 @@ function loadUpWP() {
             t.setAttribute('value', token);
 
             cvcForm.appendChild(i);
-            cvcForm.appendChild(t);  
-            
+            cvcForm.appendChild(t);
+
             Worldpay.card.reuseToken(cvcForm, function(status, response) {
                 handleWorldpayErrors(status, response, function(message) {
                     document.getElementById('worldpay-payment-errors').style.display = 'none';
@@ -253,7 +275,7 @@ function loadUpWP() {
                     handleWorldpayErrors(status, response, function(message) {
                         document.getElementById('worldpay-payment-errors').style.display = 'none';
                         var token = message.token;
-                        Worldpay.formBuilder(form, 'input', 'hidden', 'payment[token]', token);
+                        addFormElement(form, 'input', 'hidden', 'payment[token]', token);
                         if (isPostForm) {
                             form.submit();
                         }
@@ -275,7 +297,7 @@ function loadUpWP() {
                 window.WorldpayMagento.createWorldpayToken();
             } else {
                 Worldpay.submitTemplateForm();
-            } 
+            }
         }
     };
 }
